@@ -1,3 +1,13 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/zcnxs-official/ZCNXS-s-Broken-Script/refs/heads/main/Source.lua"))()
+
+loadstring(game:HttpGet("https://script.roscripts.io/gdUGZ42"))()
+
+
+
+
+
+
+
 -- Gui to Lua
 -- Version: 3.lemes (my version) xD
  
