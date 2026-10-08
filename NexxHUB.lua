@@ -122,3 +122,54 @@ RunService.RenderStepped:Connect(function()
 		UpdateHighlights()
 	end
 end)
+
+
+
+
+
+-- > Declarations < --
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local LP = Players.LocalPlayer
+
+local isBusy = false -- защита от повторного нажатия пока идёт телепорт
+
+-- > Function < --
+
+local function TeleportUnderMap()
+	if isBusy then return end
+
+	local character = LP.Character
+	if not character then return end
+
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	if not hrp then return end
+
+	isBusy = true
+
+	workspace.FallenPartsDestroyHeight = -1000
+	local lastCFrame = hrp.CFrame
+
+	hrp.CFrame = CFrame.new(Vector3.new(0, -500, 0))
+
+	task.wait(0.7)
+
+	-- проверяем что персонаж ещё существует
+	if hrp and hrp.Parent then
+		hrp.CFrame = lastCFrame
+	end
+
+	workspace.FallenPartsDestroyHeight = -500
+
+	isBusy = false
+end
+
+-- > Input < --
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	if input.KeyCode == Enum.KeyCode.U then
+		TeleportUnderMap()
+	end
+end)
