@@ -7,104 +7,54 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/protezzx/Player-joine
 
 
 
-
-
--- Create ScreenGui
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-screenGui.ResetOnSpawn = false
-
--- Create Frame
-local frame = Instance.new("Frame")
-frame.Parent = screenGui
-frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-frame.Size = UDim2.new(0, 200, 0, 100)
-frame.Position = UDim2.new(0.5, -100, 0.5, -50)
-frame.Active = true
-frame.Draggable = true
-
--- Create On Button
-local onButton = Instance.new("TextButton")
-onButton.Parent = frame
-onButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-onButton.Size = UDim2.new(0, 60, 0, 30)
-onButton.Position = UDim2.new(0, 20, 0, 20)
-onButton.Text = "On"
-onButton.TextScaled = true
-
--- Create Off Button
-local offButton = Instance.new("TextButton")
-offButton.Parent = frame
-offButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-offButton.Size = UDim2.new(0, 60, 0, 30)
-offButton.Position = UDim2.new(0, 120, 0, 20)
-offButton.Text = "Off"
-offButton.TextScaled = true
-
--- Create Destroy Button
-local destroyButton = Instance.new("TextButton")
-destroyButton.Parent = frame
-destroyButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-destroyButton.Size = UDim2.new(0, 160, 0, 30)
-destroyButton.Position = UDim2.new(0, 20, 0, 60)
-destroyButton.Text = "Destroy"
-destroyButton.TextScaled = true
-
--- Create Status Indicator
-local statusLabel = Instance.new("TextLabel")
-statusLabel.Parent = frame
-statusLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-statusLabel.Size = UDim2.new(0, 200, 0, 30)
-statusLabel.Position = UDim2.new(0, 0, 0, -30)
-statusLabel.Text = "Status: Off"
-statusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
-statusLabel.TextScaled = true
-
 -- > Declarations < --
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 local LP = Players.LocalPlayer
+
 local roles
 local highlightEnabled = false
+local Murder, Sheriff, Hero
 
--- > Functions <--
+-- > Functions < --
 
-function CreateHighlight() -- make any new highlights for new players
+function CreateHighlight() -- создаём Highlight для новых игроков
 	if highlightEnabled then
 		for i, v in pairs(Players:GetChildren()) do
 			if v ~= LP and v.Character and not v.Character:FindFirstChild("Highlight") then
-				Instance.new("Highlight", v.Character)           
+				Instance.new("Highlight", v.Character)
 			end
 		end
 	end
 end
 
-function UpdateHighlights() -- Get Current Role Colors (updated)
+function UpdateHighlights() -- обновляем цвета по ролям
 	if highlightEnabled then
 		for _, v in pairs(Players:GetChildren()) do
 			if v ~= LP and v.Character and v.Character:FindFirstChild("Highlight") then
 				local Highlight = v.Character:FindFirstChild("Highlight")
-				
-				-- Check if player has the gun and is alive
+
 				if v.Name == Sheriff and IsAlive(v) then
-					Highlight.FillColor = Color3.fromRGB(0, 0, 225) -- Blue for Sheriff
+					Highlight.FillColor = Color3.fromRGB(0, 0, 225) -- Синий для Шерифа
 				elseif HasGun(v) and IsAlive(v) then
-					Highlight.FillColor = Color3.fromRGB(0, 0, 225) -- Blue for new Sheriff (or Hero with the gun)
+					Highlight.FillColor = Color3.fromRGB(0, 0, 225) -- Синий для нового Шерифа/Героя с пистолетом
 				elseif v.Name == Murder and IsAlive(v) then
-					Highlight.FillColor = Color3.fromRGB(225, 0, 0) -- Red for Murderer
+					Highlight.FillColor = Color3.fromRGB(225, 0, 0) -- Красный для Убийцы
 				elseif v.Name == Hero and IsAlive(v) and not IsAlive(game.Players[Sheriff]) then
-					Highlight.FillColor = Color3.fromRGB(255, 250, 0) -- Yellow for Hero
+					Highlight.FillColor = Color3.fromRGB(255, 250, 0) -- Жёлтый для Героя
 				else
-					Highlight.FillColor = Color3.fromRGB(0, 0, 0) -- Green for others
+					Highlight.FillColor = Color3.fromRGB(0, 0, 0) -- Зелёный для остальных
 				end
 			end
 		end
 	end
-end	
+end
 
-function IsAlive(Player) -- Simple function to check if a player is alive
+function IsAlive(Player) -- проверка жив ли игрок
+	if not Player or not roles then return false end
 	for i, v in pairs(roles) do
 		if Player.Name == i then
 			if not v.Killed and not v.Dead then
@@ -114,9 +64,11 @@ function IsAlive(Player) -- Simple function to check if a player is alive
 			end
 		end
 	end
+	return false
 end
 
-function HasGun(Player) -- Function to check if a player has the gun
+function HasGun(Player) -- проверка есть ли пистолет
+	if not roles then return false end
 	for i, v in pairs(roles) do
 		if Player.Name == i and v.HasGun then
 			return true
@@ -125,41 +77,44 @@ function HasGun(Player) -- Function to check if a player has the gun
 	return false
 end
 
--- Button Functions
-onButton.MouseButton1Click:Connect(function()
-    highlightEnabled = true
-    statusLabel.Text = "Status: On"
-    statusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
-end)
+function ToggleHighlights()
+	highlightEnabled = not highlightEnabled
 
-offButton.MouseButton1Click:Connect(function()
-    highlightEnabled = false
-    statusLabel.Text = "Status: Off"
-    statusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
-	
-	-- Remove all highlights when turned off
-	for _, v in pairs(Players:GetChildren()) do
-		if v.Character and v.Character:FindFirstChild("Highlight") then
-			v.Character:FindFirstChild("Highlight"):Destroy()
+	if highlightEnabled then
+		print("[Highlights] ON")
+	else
+		print("[Highlights] OFF")
+		-- Удаляем все Highlight при выключении
+		for _, v in pairs(Players:GetChildren()) do
+			if v.Character and v.Character:FindFirstChild("Highlight") then
+				v.Character:FindFirstChild("Highlight"):Destroy()
+			end
 		end
 	end
-end)
+end
 
-destroyButton.MouseButton1Click:Connect(function()
-    screenGui:Destroy()
+-- > Input < --
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	if input.KeyCode == Enum.KeyCode.Y then
+		ToggleHighlights()
+	end
 end)
 
 -- > Loops < --
 
-RunService.RenderStepped:connect(function()
+RunService.RenderStepped:Connect(function()
 	if highlightEnabled then
-		roles = ReplicatedStorage:FindFirstChild("GetPlayerData", true):InvokeServer()
+		local data = ReplicatedStorage:FindFirstChild("GetPlayerData", true)
+		if not data then return end
+		roles = data:InvokeServer()
 		for i, v in pairs(roles) do
 			if v.Role == "Murderer" then
 				Murder = i
-			elseif v.Role == 'Sheriff'then
+			elseif v.Role == "Sheriff" then
 				Sheriff = i
-			elseif v.Role == 'Hero'then
+			elseif v.Role == "Hero" then
 				Hero = i
 			end
 		end
