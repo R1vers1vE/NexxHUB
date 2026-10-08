@@ -1,197 +1,169 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/zcnxs-official/ZCNXS-s-Broken-Script/refs/heads/main/Source.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/GZSSF/script3/95a45577475502cfbf546ae9ca8fc4f00b61eb83/script3"))()
 
-loadstring(game:HttpGet("https://script.roscripts.io/gdUGZ42"))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
 
-
-
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/protezzx/Player-joined-left/refs/heads/main/Antifling%20script",true))()
 
 
 
--- Gui to Lua
--- Version: 3.lemes (my version) xD
- 
--- Instances:
- 
-local ScreenGui = Instance.new("ScreenGui")
-local Frame = Instance.new("Frame")
-local ESPon = Instance.new("TextButton")
-local ESPOff = Instance.new("TextButton")
-local HIDE = Instance.new("TextButton")
-local OPEN = Instance.new("TextButton")
 
---Properties:
- 
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-ScreenGui.ResetOnSpawn = false
- 
-Frame.Parent = ScreenGui
-Frame.BackgroundColor3 = Color3.new(0, 0, 0)
-Frame.Position = UDim2.new(0.166156977, 0, 0, 0)
-Frame.Size = UDim2.new(0, 163, 0, 227)  --comando original (tamanho original): Frame.Size = UDim2.new(0, 163, 0, 454)
- 
-ESPon.Name = "ESPon"
-ESPon.Parent = ScreenGui
-ESPon.BackgroundColor3 = Color3.new(0, 1, 0)
-ESPon.Position = UDim2.new(0.166156977, 0, -4.41335142e-05, 0)
-ESPon.Size = UDim2.new(0, 163, 0, 50)
-ESPon.Font = Enum.Font.SourceSans
-ESPon.Text = "ESP ON (press E)"
-ESPon.TextColor3 = Color3.new(0, 0, 0)
-ESPon.TextScaled = true
-ESPon.TextSize = 14
-ESPon.TextWrapped = true
- 
-ESPOff.Name = "ESPOff"
-ESPOff.Parent = ScreenGui
-ESPOff.BackgroundColor3 = Color3.new(1, 0, 0.0156863)
-ESPOff.Position = UDim2.new(0.166156977, 0, 0.105935514, 0)
-ESPOff.Size = UDim2.new(0, 163, 0, 50)
-ESPOff.Font = Enum.Font.SourceSans
-ESPOff.Text = "ESP OFF (press F)"
-ESPOff.TextColor3 = Color3.new(0, 0, 0)
-ESPOff.TextScaled = true
-ESPOff.TextSize = 14
-ESPOff.TextWrapped = true
- 
-HIDE.Name = "HIDE"
-HIDE.Parent = ScreenGui
-HIDE.BackgroundColor3 = Color3.new(1, 0, 0.0156863)
-HIDE.Position = UDim2.new(0.166156977, 0, 0.211999387, 0)
-HIDE.Size = UDim2.new(0, 163, 0, 56)
-HIDE.Font = Enum.Font.SourceSans
-HIDE.Text = "HIDE"
-HIDE.TextColor3 = Color3.new(0, 0, 0)
-HIDE.TextScaled = true
-HIDE.TextSize = 14
-HIDE.TextWrapped = true
- 
-OPEN.Name = "OPEN"
-OPEN.Parent = ScreenGui
-OPEN.Active = false
-OPEN.BackgroundColor3 = Color3.new(0.0117647, 1, 0.0117647)
-OPEN.Position = UDim2.new(0, 0, 0.0418502204, 0)
-OPEN.Size = UDim2.new(0, 116, 0, 19)
-OPEN.Visible = false
-OPEN.Font = Enum.Font.SourceSans
-OPEN.Text = "OPEN"
-OPEN.TextColor3 = Color3.new(0, 0, 0)
-OPEN.TextScaled = true
-OPEN.TextSize = 14
-OPEN.TextWrapped = true
 
- 
--- Scripts:
- 
-local function XVGFY_fake_script() -- ScreenGui.LocalScript
-local script = Instance.new('LocalScript', ScreenGui)
- 
--- FUNCTIONS
-function murderer()
-	for i, v in pairs(game.Players:children()) do
-		if  v.Backpack:findFirstChild("Knife") or v.Character:findFirstChild("Knife") then
-			return v
-		end
-	end
-end
- 
-function sherrif()
-	for i, v in pairs(game.Players:children()) do
-		if  v.Backpack:findFirstChild("Gun") or v.Character:findFirstChild("Gun") then
-			return v
-		end
-	end
-end
- 
- 
--- ESP ON BUTTON (my new command is ESP ON KEY xD)
- 
---script.Parent.ESPon.MouseButton1Down:connect(function()
-game:GetService("UserInputService").InputBegan:connect(function(inputObject, gameProcessedEvent)
-	if inputObject.KeyCode == Enum.KeyCode.E then
-	
-		for i, v in pairs(game.Players:children()) do
-			if v.Backpack:findFirstChild("Knife") or v.Character:findFirstChild("Knife") then
-				local esp = Instance.new("BoxHandleAdornment")
-				esp.Parent = v.Character.Head
-				esp.Size = Vector3.new(1,1,1)
-				esp.Color3 = Color3.new(255, 0, 0)
-				esp.AlwaysOnTop = true
-				esp.Adornee = v.Character.Head
-				esp.Visible = true
-				esp.ZIndex = 2
-				 
-			elseif v.Backpack:findFirstChild("Gun") or v.Character:findFirstChild("Gun") then
-				local esp = Instance.new("BoxHandleAdornment")
-				esp.Parent = v.Character.Head
-				esp.Size = Vector3.new(1,1,1)
-				esp.Color3 = Color3.new(0, 0, 255)
-				esp.AlwaysOnTop = true
-				esp.Adornee = v.Character.Head
-				esp.Visible = true
-				esp.ZIndex = 2
-			else
-				local esp = Instance.new("BoxHandleAdornment")
-				esp.Parent = v.Character.Head
-				esp.Size = Vector3.new(1,1,1)
-				esp.Color3 = Color3.new(0, 255, 0)
-				esp.AlwaysOnTop = true
-				esp.Adornee = v.Character.Head
-				esp.Visible = true
-				esp.ZIndex = 2
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+screenGui.ResetOnSpawn = false
+
+-- Create Frame
+local frame = Instance.new("Frame")
+frame.Parent = screenGui
+frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+frame.Size = UDim2.new(0, 200, 0, 100)
+frame.Position = UDim2.new(0.5, -100, 0.5, -50)
+frame.Active = true
+frame.Draggable = true
+
+-- Create On Button
+local onButton = Instance.new("TextButton")
+onButton.Parent = frame
+onButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+onButton.Size = UDim2.new(0, 60, 0, 30)
+onButton.Position = UDim2.new(0, 20, 0, 20)
+onButton.Text = "On"
+onButton.TextScaled = true
+
+-- Create Off Button
+local offButton = Instance.new("TextButton")
+offButton.Parent = frame
+offButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+offButton.Size = UDim2.new(0, 60, 0, 30)
+offButton.Position = UDim2.new(0, 120, 0, 20)
+offButton.Text = "Off"
+offButton.TextScaled = true
+
+-- Create Destroy Button
+local destroyButton = Instance.new("TextButton")
+destroyButton.Parent = frame
+destroyButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+destroyButton.Size = UDim2.new(0, 160, 0, 30)
+destroyButton.Position = UDim2.new(0, 20, 0, 60)
+destroyButton.Text = "Destroy"
+destroyButton.TextScaled = true
+
+-- Create Status Indicator
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Parent = frame
+statusLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+statusLabel.Size = UDim2.new(0, 200, 0, 30)
+statusLabel.Position = UDim2.new(0, 0, 0, -30)
+statusLabel.Text = "Status: Off"
+statusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+statusLabel.TextScaled = true
+
+-- > Declarations < --
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LP = Players.LocalPlayer
+local roles
+local highlightEnabled = false
+
+-- > Functions <--
+
+function CreateHighlight() -- make any new highlights for new players
+	if highlightEnabled then
+		for i, v in pairs(Players:GetChildren()) do
+			if v ~= LP and v.Character and not v.Character:FindFirstChild("Highlight") then
+				Instance.new("Highlight", v.Character)           
 			end
-		end		
+		end
 	end
-end)
---)
- 
--- ESP OFF BUTTON
- 
---script.Parent.ESPOff.MouseButton1Down:connect(function()
-game:GetService("UserInputService").InputBegan:connect(function(inputObject, gameProcessedEvent)
-	if inputObject.KeyCode == Enum.KeyCode.F then
-		for i, v in pairs(game.Players:children()) do
-			for i, a in pairs(v.Character.Head:children()) do
-				if a.ClassName == "BoxHandleAdornment" then
-					a:remove()
+end
+
+function UpdateHighlights() -- Get Current Role Colors (updated)
+	if highlightEnabled then
+		for _, v in pairs(Players:GetChildren()) do
+			if v ~= LP and v.Character and v.Character:FindFirstChild("Highlight") then
+				local Highlight = v.Character:FindFirstChild("Highlight")
+				
+				-- Check if player has the gun and is alive
+				if v.Name == Sheriff and IsAlive(v) then
+					Highlight.FillColor = Color3.fromRGB(0, 0, 225) -- Blue for Sheriff
+				elseif HasGun(v) and IsAlive(v) then
+					Highlight.FillColor = Color3.fromRGB(0, 0, 225) -- Blue for new Sheriff (or Hero with the gun)
+				elseif v.Name == Murder and IsAlive(v) then
+					Highlight.FillColor = Color3.fromRGB(225, 0, 0) -- Red for Murderer
+				elseif v.Name == Hero and IsAlive(v) and not IsAlive(game.Players[Sheriff]) then
+					Highlight.FillColor = Color3.fromRGB(255, 250, 0) -- Yellow for Hero
+				else
+					Highlight.FillColor = Color3.fromRGB(0, 0, 0) -- Green for others
 				end
 			end
 		end
 	end
-end)
+end	
 
---end)
-
- 
--- Hide Button
- 
-script.Parent.HIDE.MouseButton1Down:connect(function()
-	for i, v in pairs(script.Parent:children()) do
-		if v.Name ~= "OPEN" then
-			v.Visible = false
-			v.Active = false
-		 
-		else
-			v.Active = false
-			v.Visible = false
+function IsAlive(Player) -- Simple function to check if a player is alive
+	for i, v in pairs(roles) do
+		if Player.Name == i then
+			if not v.Killed and not v.Dead then
+				return true
+			else
+				return false
+			end
 		end
 	end
-end)
- 
--- Open Button
- 
-script.Parent.OPEN.MouseButton1Down:connect(function()
-	for i, v in pairs(script.Parent:children()) do
-		if v.Name ~= "OPEN" then
-			v.Visible = true
-			v.Active = true
-		 
-		else
-			v.Active = false
-			v.Visible = false
-		end
-	end
-end)
-
 end
-coroutine.wrap(XVGFY_fake_script)()
+
+function HasGun(Player) -- Function to check if a player has the gun
+	for i, v in pairs(roles) do
+		if Player.Name == i and v.HasGun then
+			return true
+		end
+	end
+	return false
+end
+
+-- Button Functions
+onButton.MouseButton1Click:Connect(function()
+    highlightEnabled = true
+    statusLabel.Text = "Status: On"
+    statusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+end)
+
+offButton.MouseButton1Click:Connect(function()
+    highlightEnabled = false
+    statusLabel.Text = "Status: Off"
+    statusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+	
+	-- Remove all highlights when turned off
+	for _, v in pairs(Players:GetChildren()) do
+		if v.Character and v.Character:FindFirstChild("Highlight") then
+			v.Character:FindFirstChild("Highlight"):Destroy()
+		end
+	end
+end)
+
+destroyButton.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
+
+-- > Loops < --
+
+RunService.RenderStepped:connect(function()
+	if highlightEnabled then
+		roles = ReplicatedStorage:FindFirstChild("GetPlayerData", true):InvokeServer()
+		for i, v in pairs(roles) do
+			if v.Role == "Murderer" then
+				Murder = i
+			elseif v.Role == 'Sheriff'then
+				Sheriff = i
+			elseif v.Role == 'Hero'then
+				Hero = i
+			end
+		end
+		CreateHighlight()
+		UpdateHighlights()
+	end
+end)
