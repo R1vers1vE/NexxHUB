@@ -173,3 +173,142 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 		TeleportUnderMap()
 	end
 end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--[[
+	Крестик вместо курсора мыши + вместо шифтлока
+	Без картинок, всё рисуется кодом
+]]
+
+local Players     = game:GetService("Players")
+local UIS         = game:GetService("UserInputService")
+local RunService  = game:GetService("RunService")
+local CoreGui     = game:GetService("CoreGui")
+local player      = Players.LocalPlayer
+
+-- ============ НАСТРОЙКИ ============
+local CURSOR_SIZE    = 14   -- размер крестика курсора
+local CURSOR_THICK   = 2    -- толщина линий
+local SHIFTLOCK_SIZE = 10   -- размер крестика в шифтлоке
+local SHIFTLOCK_THICK = 2
+local COLOR          = Color3.fromRGB(255, 255, 255) -- белый
+local OUTLINE_COLOR  = Color3.fromRGB(0, 0, 0)       -- чёрная обводка
+local OUTLINE        = true
+-- ===================================
+
+-- чистим старое
+for _, v in ipairs(CoreGui:GetChildren()) do
+	if v.Name == "MyCrosshairGui" then v:Destroy() end
+end
+for _, v in ipairs(player:WaitForChild("PlayerGui"):GetChildren()) do
+	if v.Name == "MyCrosshairGui" then v:Destroy() end
+end
+
+UIS.MouseIconEnabled = false
+
+-- создаём гуи
+local gui = Instance.new("ScreenGui")
+gui.Name = "MyCrosshairGui"
+gui.IgnoreGuiInset = true
+gui.ResetOnSpawn = false
+gui.DisplayOrder = 2147483647
+
+local ok = pcall(function() gui.Parent = CoreGui end)
+if not ok or not gui.Parent then
+	gui.Parent = player:WaitForChild("PlayerGui")
+end
+
+-- функция создания крестика
+local function makeCrosshair(parent, size, thick)
+	local holder = Instance.new("Frame")
+	holder.Name = "Crosshair"
+	holder.Size = UDim2.fromOffset(size, size)
+	holder.BackgroundTransparency = 1
+	holder.AnchorPoint = Vector2.new(0.5, 0.5)
+	holder.ZIndex = 10
+	holder.Parent = parent
+
+	local function line(w, h, pos, color, z)
+		local f = Instance.new("Frame")
+		f.Size = UDim2.fromOffset(w, h)
+		f.Position = UDim2.new(0.5, pos.X, 0.5, pos.Y)
+		f.AnchorPoint = Vector2.new(0.5, 0.5)
+		f.BackgroundColor3 = color
+		f.BorderSizePixel = 0
+		f.ZIndex = z
+		f.Parent = holder
+		return f
+	end
+
+	-- обводка (чуть толще, чёрная, сзади)
+	if OUTLINE then
+		line(size + 2, thick + 2, Vector2.new(0, 0), OUTLINE_COLOR, 1) -- горизонт
+		line(thick + 2, size + 2, Vector2.new(0, 0), OUTLINE_COLOR, 1) -- вертикал
+	end
+
+	-- сам крестик (белый, спереди)
+	line(size, thick, Vector2.new(0, 0), COLOR, 2) -- горизонтальная линия
+	line(thick, size, Vector2.new(0, 0), COLOR, 2) -- вертикальная линия
+
+	return holder
+end
+
+-- КУРСОР
+local cursor = makeCrosshair(gui, CURSOR_SIZE, CURSOR_THICK)
+
+-- ШИФТЛОК
+local shift = makeCrosshair(gui, SHIFTLOCK_SIZE, SHIFTLOCK_THICK)
+shift.Visible = false
+
+-- позиция шифтлока — центр экрана
+local function setShiftPos()
+	local cam = workspace.CurrentCamera
+	if cam then
+		local vp = cam.ViewportSize
+		shift.Position = UDim2.fromOffset(vp.X / 2, vp.Y / 2)
+	end
+end
+setShiftPos()
+workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(setShiftPos)
+
+-- движение курсора + переключение
+RunService.RenderStepped:Connect(function()
+	local loc = UIS:GetMouseLocation()
+	cursor.Position = UDim2.fromOffset(loc.X, loc.Y)
+
+	if UIS.MouseBehavior == Enum.MouseBehavior.LockCenter then
+		shift.Visible = true
+		cursor.Visible = false
+	else
+		shift.Visible = false
+		cursor.Visible = true
+	end
+end)
+
+-- цикл на случай если игра включает системный курсор обратно
+task.spawn(function()
+	while task.wait(0.2) do
+		if UIS.MouseIconEnabled then
+			UIS.MouseIconEnabled = false
+		end
+		if not gui.Parent then
+			pcall(function() gui.Parent = CoreGui end)
+			if not gui.Parent then gui.Parent = player:WaitForChild("PlayerGui") end
+		end
+	end
+end)
+
+print("[Crosshair] Крестик установлен")
